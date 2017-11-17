@@ -11,33 +11,34 @@ class LoadAdvert extends Fixture implements FixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $listAdverts = array(
-            array(
-                'image_id'=> $this->getReference('advert-image'),
-                'title'   => 'Recherche développpeur Symfony',
-                'author'  => 'Alexandre',
-                'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…'),
-            array(
-                'image_id'=> null,
-                'title'   => 'Mission de webmaster',
-                'author'  => 'Hugo',
-                'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…'),
-            array(
-                'image_id'=> null,
-                'title'   => 'Offre de stage webdesigner',
-                'author'  => 'Mathieu',
-                'content' => 'Nous proposons un poste pour webdesigner. Blabla…'),
-        );
+        $advert1 = new Advert();
+        $advert1->setImage($this->getReference('advert-image'));
+        $advert1->setTitle('Recherche développpeur Symfony');
+        $advert1->setAuthor('Alexandre');
+        $advert1->setContent('Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…');
+        $advert1->addCategory($this->getReference('category1'));
+        $advert1->addCategory($this->getReference('category2'));
 
-        foreach ($listAdverts as $a)
-        {
-            $advert = new Advert();
-            $advert->setImage($a['image_id']);
-            $advert->setTitle($a['title']);
-            $advert->setAuthor($a['author']);
-            $advert->setContent($a['content']);
-            $manager->persist($advert);
-        }
+        $advert2 = new Advert();
+        $advert2->setImage(null);
+        $advert2->setTitle('Mission de webmaster');
+        $advert2->setAuthor('Hugo');
+        $advert2->setContent('Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…');
+        $advert2->addCategory($this->getReference('category3'));
+        $advert2->addCategory($this->getReference('category4'));
+
+        $advert3 = new Advert();
+        $advert3->setImage(null);
+        $advert3->setTitle('Offre de stage webdesigner');
+        $advert3->setAuthor('Mathieu');
+        $advert3->setContent('Nous proposons un poste pour webdesigner. Blabla…');
+        $advert3->addCategory($this->getReference('category5'));
+
+        $this->addReference('advert1', $advert1);
+
+        $manager->persist($advert1);
+        $manager->persist($advert2);
+        $manager->persist($advert3);
 
         $manager->flush();
 
@@ -47,6 +48,7 @@ class LoadAdvert extends Fixture implements FixtureInterface
     {
         return array(
             LoadImage::class,
+            LoadCategory::class,
         );
     }
 }

@@ -11,7 +11,6 @@ class LoadImage extends Fixture implements FixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        // Creation d'une image
         $image = new Image();
         $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
         $image->setAlt('Job de rêve');
