@@ -88,7 +88,7 @@ class Advert
   private $slug;
 
   /**
-   * @ORM\OneToMany(targetEntity="OCPlatformBundle\Entity\AdvertSkill", mappedBy="advert")
+   * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", mappedBy="advert")
    */
   private $advertSkills;
 
