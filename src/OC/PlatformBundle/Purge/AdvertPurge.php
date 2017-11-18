@@ -3,7 +3,6 @@
 namespace OC\PlatformBundle\Purge;
 
 use Doctrine\ORM\EntityManagerInterface;
-use OC\PlatformBundle\Entity\Advert;
 
 class AdvertPurge
 {
@@ -25,7 +24,7 @@ class AdvertPurge
         $entityManager = $this->em;
 
         $advertRepository = $entityManager->getRepository('OCPlatformBundle:Advert');
-        /*$advertSkillRepository= $entityManager->getRepository('OCPlatformBundle:AdvertSkill');
+        $advertSkillRepository= $entityManager->getRepository('OCPlatformBundle:AdvertSkill');
 
         $listAdvertsToDelete = $advertRepository->getOutdatedAdvert($date);
 
@@ -40,15 +39,6 @@ class AdvertPurge
 
             $entityManager->remove($advert);
         }
-        */
-        $listAdvertsToDelete = $advertRepository->getOutdatedAdvert($date);
-
-        foreach ($listAdvertsToDelete as $advert)
-        {
-
-            $entityManager->remove($advert);
-        }
-
         $entityManager->flush();
     }
 }
