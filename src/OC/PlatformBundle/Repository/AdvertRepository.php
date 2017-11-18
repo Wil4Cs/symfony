@@ -8,6 +8,28 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class AdvertRepository extends EntityRepository
 {
+    public function getOutdatedAdvert(\DateTime $date)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb
+            ->where($qb->expr()->andX(
+                $qb->expr()->orX(
+                    $qb->expr()->lte('a.updatedAt',':date'),
+                    $qb->expr()->andX(
+                        $qb->expr()->isNull('a.updatedAt'),
+                        $qb->expr()->lte('a.date', ':date')
+                    )
+                )
+            ),
+            'a.applications IS EMPTY')
+            ->setParameter('date', $date)
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getAdverts($page, $nbPerPage)
     {
         $query = $this->createQueryBuilder('a')

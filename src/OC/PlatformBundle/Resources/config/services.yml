@@ -20,6 +20,11 @@ services:
     tags:
       - { name: doctrine.event_listener, event: postPersist }
 
+  oc_platform.purge.advert:
+    class: OC\PlatformBundle\Purge\AdvertPurge
+    arguments:
+      - "@doctrine.orm.entity_manager"
+
 parameters:
 # Parameter for pagination
     nb_per_page: 2
