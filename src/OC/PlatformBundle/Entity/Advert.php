@@ -18,66 +18,85 @@ class Advert
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
      */
     private $date;
+
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
+
     /**
      * @var string
      *
      * @ORM\Column(name="author", type="string", length=255)
      */
     private $author;
+
     /**
      * @var string
      *
      * @ORM\Column(name="content", type="string", length=255)
      */
     private $content;
+
     /**
      * @ORM\Column(name="published", type="boolean")
      */
     private $published = true;
+
     /**
-     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"}, orphanRemoval=true)
      */
     private $image;
+
     /**
      * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
      * @ORM\JoinTable(name="oc_advert_category")
      */
     private $categories;
+
     /**
      * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
      */
     private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
+
     /**
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
+
     /**
      * @ORM\Column(name="nb_applications", type="integer")
      */
     private $nbApplications = 0;
+
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(name="slug", type="string", length=255, unique=true)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", cascade={"persist"}, mappedBy="advert", orphanRemoval=true)
+     */
+    private $advertSkills;
+
     public function __construct()
     {
         $this->date         = new \Datetime();
         $this->categories   = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->advertSkills = new ArrayCollection();
     }
+
     /**
      * @ORM\PreUpdate
      */
@@ -263,5 +282,41 @@ class Advert
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Add advertSkill
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkill
+     *
+     * @return Advert
+     */
+    public function addAdvertSkill(AdvertSkill $advertSkill)
+    {
+        $this->advertSkills[] = $advertSkill;
+
+        $advertSkill->setAdvert($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove advertSkill
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkill
+     */
+    public function removeAdvertSkill(AdvertSkill $advertSkill)
+    {
+        $this->advertSkills->removeElement($advertSkill);
+    }
+
+    /**
+     * Get advertSkills
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAdvertSkills()
+    {
+        return $this->advertSkills;
     }
 }

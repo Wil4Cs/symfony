@@ -24,21 +24,15 @@ class AdvertPurge
         $entityManager = $this->em;
 
         $advertRepository = $entityManager->getRepository('OCPlatformBundle:Advert');
-        $advertSkillRepository= $entityManager->getRepository('OCPlatformBundle:AdvertSkill');
 
         $listAdvertsToDelete = $advertRepository->getOutdatedAdvert($date);
 
+
         foreach ($listAdvertsToDelete as $advert)
         {
-            $advertSkills = $advertSkillRepository->findBy(array('advert' => $advert));
-
-            foreach ($advertSkills as $skill)
-            {
-                $entityManager->remove($skill);
-            }
-
             $entityManager->remove($advert);
         }
+
         $entityManager->flush();
     }
 }
