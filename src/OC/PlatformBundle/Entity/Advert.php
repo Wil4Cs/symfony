@@ -4,13 +4,14 @@ namespace OC\PlatformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+// N'oubliez pas ce use :
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="oc_advert")
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Repository\AdvertRepository")
  * @ORM\HasLifecycleCallbacks()
-*/
+ */
 class Advert
 {
   /**
@@ -56,7 +57,7 @@ class Advert
   private $published = true;
 
   /**
-   * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
+   * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist", "remove"})
    */
   private $image;
 
@@ -67,7 +68,7 @@ class Advert
   private $categories;
 
   /**
-   * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
+   * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", cascade={"persist"}, mappedBy="advert", orphanRemoval=true)
    */
   private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
 
@@ -87,11 +88,17 @@ class Advert
    */
   private $slug;
 
+  /**
+   * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", cascade={"persist"}, mappedBy="advert", orphanRemoval=true)
+   */
+  private $advertSkills;
+
   public function __construct()
   {
     $this->date         = new \Datetime();
     $this->categories   = new ArrayCollection();
     $this->applications = new ArrayCollection();
+    $this->advertSkills = new ArrayCollection();
   }
 
   /**
@@ -307,5 +314,39 @@ class Advert
   public function getSlug()
   {
       return $this->slug;
+  }
+
+  /**
+   * Add advertSkill
+   *
+   * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkill
+   *
+   * @return Advert
+   */
+  public function addAdvertSkill(AdvertSkill $advertSkill)
+  {
+      $this->advertSkills[] = $advertSkill;
+      $advertSkill->setAdvert($this);
+      return $this;
+  }
+
+  /**
+   * Remove advertSkill
+   *
+   * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkill
+   */
+  public function removeAdvertSkill(AdvertSkill $advertSkill)
+  {
+      $this->advertSkills->removeElement($advertSkill);
+  }
+
+  /**
+   * Get advertSkills
+   *
+   * @return \Doctrine\Common\Collections\Collection
+   */
+  public function getAdvertSkills()
+  {
+      return $this->advertSkills;
   }
 }

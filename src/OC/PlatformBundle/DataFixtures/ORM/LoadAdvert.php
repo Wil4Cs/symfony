@@ -12,7 +12,7 @@ class LoadAdvert extends Fixture implements FixtureInterface
     public function load(ObjectManager $manager)
     {
         $advert1 = new Advert();
-        $advert1->setImage($this->getReference('advert-image'));
+        $advert1->setImage(null);
         $advert1->setTitle('Recherche développpeur Symfony');
         $advert1->setAuthor('Alexandre');
         $advert1->setContent('Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…');
@@ -47,7 +47,6 @@ class LoadAdvert extends Fixture implements FixtureInterface
     public function getDependencies()
     {
         return array(
-            LoadImage::class,
             LoadCategory::class,
         );
     }

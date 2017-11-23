@@ -7,43 +7,33 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AdvertPurger
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+  /**
+   * @var EntityManagerInterface
+   */
+  private $em;
 
-    // On injecte l'EntityManager
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
+  // On injecte l'EntityManager
+  public function __construct(EntityManagerInterface $em)
+  {
+    $this->em = $em;
+  }
 
-    public function purge($days)
-    {
-        $advertRepository      = $this->em->getRepository('OCPlatformBundle:Advert');
-        $advertSkillRepository = $this->em->getRepository('OCPlatformBundle:AdvertSkill');
+  public function purge($days)
+  {
+      // http://php.net/manual/fr/datetime.formats.relative.php
+      $date = new \Datetime($days.' days ago');
 
-        // date d'il y a $days jours
-        $date = new \Datetime($days.' days ago');
+      $entityManager = $this->em;
 
-        // On récupère les annonces à supprimer
-        $listAdverts = $advertRepository->getAdvertsBefore($date);
+      $advertRepository = $entityManager->getRepository('OCPlatformBundle:Advert');
 
-        // On parcourt les annonces pour les supprimer effectivement
-        foreach ($listAdverts as $advert) {
-            // On récupère les AdvertSkill liées à cette annonce
-            $advertSkills = $advertSkillRepository->findBy(array('advert' => $advert));
+      $listAdvertsToDelete = $advertRepository->getAdvertsBefore($date);
 
-            // Pour les supprimer toutes avant de pouvoir supprimer l'annonce elle-même
-            foreach ($advertSkills as $advertSkill) {
-                $this->em->remove($advertSkill);
-            }
+      foreach ($listAdvertsToDelete as $advert)
+      {
+          $entityManager->remove($advert);
+      }
 
-            // On peut maintenant supprimer l'annonce
-            $this->em->remove($advert);
-        }
-
-        // Et on n'oublie pas de faire un flush !
-        $this->em->flush();
-    }
+      $entityManager->flush();
+  }
 }
