@@ -5,6 +5,7 @@ namespace OC\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="oc_image")
@@ -32,6 +33,7 @@ class Image
 
   /**
    * @var UploadedFile
+   * @Assert\File(mimeTypes = {"image/jpeg", "image/png"})
    */
   private $file;
 
