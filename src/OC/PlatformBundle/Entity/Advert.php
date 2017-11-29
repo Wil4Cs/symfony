@@ -4,8 +4,8 @@ namespace OC\PlatformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-// N'oubliez pas ce use :
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="oc_advert")
@@ -25,28 +25,28 @@ class Advert
 
   /**
    * @var \DateTime
-   *
+   * @Assert\DateTime()
    * @ORM\Column(name="date", type="datetime")
    */
   private $date;
 
   /**
    * @var string
-   *
+   * @Assert\Length(min=10)
    * @ORM\Column(name="title", type="string", length=255)
    */
   private $title;
 
   /**
    * @var string
-   *
+   * @Assert\Length(min=3)
    * @ORM\Column(name="author", type="string", length=255)
    */
   private $author;
 
   /**
    * @var string
-   *
+   * @Assert\NotBlank()
    * @ORM\Column(name="content", type="string", length=255)
    */
   private $content;
@@ -57,6 +57,7 @@ class Advert
   private $published = true;
 
   /**
+   * @Assert\Valid()
    * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist", "remove"})
    */
   private $image;
