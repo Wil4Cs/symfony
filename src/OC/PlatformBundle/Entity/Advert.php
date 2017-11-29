@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Table(name="oc_advert")
@@ -349,5 +350,25 @@ class Advert
   public function getAdvertSkills()
   {
       return $this->advertSkills;
+  }
+
+  /**
+   * @param ExecutionContextInterface $context
+   * @Assert\CallBack
+   */
+  public function isContentValid(ExecutionContextInterface $context)
+  {
+      $forbiddenWords = array('démotivation', 'abandon');
+
+      // On vérifie que le contenu ne contient pas l'un des mots
+      if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getContent())) {
+
+          // La règle est violée, on définit l'erreur
+          $context
+              ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+              ->atPath('content')                                                   // attribut de l'objet qui est violé
+              ->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+          ;
+      }
   }
 }
