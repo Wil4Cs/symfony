@@ -1,0 +1,13 @@
+<html>
+    <body>
+        <div>
+            {{ 'Hello'|trans }} {{ name }}!
+            {{ 'Bye'|trans }} {{ name }}...
+        </div>
+        <div>
+            {% for i in 0..2 %}
+                <p>{{ ('charte.donnee.' ~ i )|trans }}</p>
+            {% endfor %}
+        </div>
+    </body>
+</html>
